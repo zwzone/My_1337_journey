@@ -33,7 +33,7 @@ char	*ft_strtrim(char const *s1, char const *set)
 	last_index = len - 1;
 	if (first_index > last_index)
 		return (ft_strdup(""));
-	while (ft_strchr(set, s1[last_index]) && last_index >= 0)
+	while (ft_strchr(set, s1[last_index]))
 		last_index--;
 	str = ft_substr(s1, first_index, last_index - first_index + 1);
 	return (str);

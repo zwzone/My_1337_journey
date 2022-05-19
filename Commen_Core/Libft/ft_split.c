@@ -75,9 +75,8 @@ static void	ft_str_to_strs(char **strs, char const *s, char c, size_t n_of_strs)
 				ft_free_strs(strs, i);
 				break ;
 			}
-			else
-				ft_strlcpy(strs[i], s + j, len + 1);
-				j += len;
+			ft_strlcpy(strs[i], s + j, len + 1);
+			j += len;
 		}
 		i++;
 	}
