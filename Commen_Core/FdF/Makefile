@@ -6,13 +6,12 @@
 #    By: zwina <zwina@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/05 15:48:21 by zwina             #+#    #+#              #
-#    Updated: 2022/03/05 15:48:26 by zwina            ###   ########.fr        #
+#    Updated: 2022/06/25 19:47:39 by zwina            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME			:= fdf
 CCWI			:= gcc -Wall -Wextra -Werror -Iincludes
-MINILIBX_LINK	:= -lm -lmlx -framework OpenGL -framework AppKit
 
 SRCS_UTILITIES	:= src/utilities/fdf_utils_1.c \
 				   src/utilities/fdf_utils_2.c \
@@ -58,11 +57,25 @@ LIBOBJ_LINK		:= -L./bin/libs -lobj
 LIBOBJ_BO		:= bin/libs/libobj_bo.a
 LIBOBJ_BO_LINK	:= -L./bin/libs -lobj_bo
 
+MLBX_LINK_MAC	:= -lm -framework OpenGL -framework AppKit -L./mlxlibs -lmlxmac -Imlxmac_inc
+MLBX_LINK_LINUX	:= -lm -lXext -lX11 -L./mlxlibs -lmlxlinux -Imlxlinux_inc
+
 ### mandatory
 all : $(NAME)
 
+mac : all
+
+linux : bin $(LIBOBJ)
+	@$(CCWI) $(LIBOBJ_LINK) $(MLBX_LINK_LINUX) -o $(NAME)
+	@printf "\e[38;5;220m\t ______   _____     ______ \
+	\n\t/\  ___\ /\  __-.  /\  ___\ \
+	\n\t\ \  __\ \ \ \/\ \ \ \  __\ \
+	\n\t \ \_\    \ \____-  \ \_\   \
+	\n\t  \/_/     \/____/   \/_/   is REDY.\e[0m\n"
+	@rm -rf $(LIBOBJ_BO)
+
 $(NAME) : bin $(LIBOBJ)
-	@$(CCWI) $(LIBOBJ_LINK) $(MINILIBX_LINK) -o $(NAME)
+	@$(CCWI) $(LIBOBJ_LINK) $(MLBX_LINK_MAC) -o $(NAME)
 	@printf "\e[38;5;220m\t ______   _____     ______ \
 	\n\t/\  ___\ /\  __-.  /\  ___\ \
 	\n\t\ \  __\ \ \ \/\ \ \ \  __\ \
@@ -76,9 +89,21 @@ $(LIBOBJ) : $(OBJS)
 ### bonus
 bonus : $(LIBOBJ_BO)
 
+mac_bonus : bonus
+
+linux_bonus : bin $(LIBOBJ)
+	@ar -rsc $@ $(OBJS_BO)
+	@$(CCWI) $(LIBOBJ_BO_LINK) $(MLBX_LINK_LINUX) -o $(NAME)
+	@printf "\e[38;5;220m\t ______   _____     ______ \
+	\n\t/\  ___\ /\  __-.  /\  ___\ \
+	\n\t\ \  __\ \ \ \/\ \ \ \  __\ \
+	\n\t \ \_\    \ \____-  \ \_\   \
+	\n\t  \/_/     \/____/   \/_/   ( B O N U S ) is REDY.\e[0m\n"
+	@rm -rf $(LIBOBJ)
+
 $(LIBOBJ_BO) : bin $(OBJS_BO)
 	@ar -rsc $@ $(OBJS_BO)
-	@$(CCWI) $(LIBOBJ_BO_LINK) $(MINILIBX_LINK) -o $(NAME)
+	@$(CCWI) $(LIBOBJ_BO_LINK) $(MLBX_LINK_MAC) -o $(NAME)
 	@printf "\e[38;5;220m\t ______   _____     ______ \
 	\n\t/\  ___\ /\  __-.  /\  ___\ \
 	\n\t\ \  __\ \ \ \/\ \ \ \  __\ \
